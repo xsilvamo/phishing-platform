@@ -7,4 +7,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  base: '/', // Asegura que se sirvan desde la raíz
 });
+
