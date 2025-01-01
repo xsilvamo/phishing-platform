@@ -1,29 +1,26 @@
-# Etapa de construcción
-FROM node:18 AS build
+# Usa una imagen base de Node.js
+FROM node:16
 
-# Configura el directorio de trabajo
-WORKDIR /usr/src/app
+# Establece el directorio de trabajo
+WORKDIR /app
 
-# Copia los archivos necesarios para construir el proyecto
-COPY package.json package-lock.json ./
+# Copia los archivos del proyecto
+COPY . .
 
 # Instala las dependencias
 RUN npm install
 
-# Copia todo el código fuente
-COPY . .
-
-# Construye el proyecto para producción
+# Construye la aplicación React
 RUN npm run build
 
-# Etapa de producción
-FROM nginx:latest
+# Usa una imagen de Nginx para servir la aplicación
+FROM nginx:alpine
 
-# Copia los archivos estáticos generados por Vite al servidor Nginx
-COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+# Copia los archivos de la carpeta build de React a Nginx
+COPY --from=0 /app/build /usr/share/nginx/html
 
-# Expone el puerto 80
+# Exponer el puerto 80
 EXPOSE 80
 
-# Inicia Nginx
+# Comando para arrancar Nginx
 CMD ["nginx", "-g", "daemon off;"]
