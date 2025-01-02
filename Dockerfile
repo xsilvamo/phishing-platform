@@ -1,11 +1,11 @@
 # Usa una imagen base de Node.js
-FROM node:16
+FROM node:18-alpine as builder
 
 # Establece el directorio de trabajo
 WORKDIR /app
 
 # Copia los archivos del proyecto
-COPY . .
+COPY package.json ./
 
 # Instala las dependencias
 RUN npm install
@@ -17,7 +17,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copia los archivos de la carpeta build de React a Nginx
-COPY --from=0 /app/build /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Exponer el puerto 80
 EXPOSE 80
