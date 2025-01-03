@@ -1,0 +1,38 @@
+name: CI/CD Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Clonar el repositorio
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # 2. Configurar SSH
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    # 3. Añadir la IP a host conocidos
+    - name: Add server to known_hosts
+      run: |
+        ssh-keyscan -H ${{ secrets.DEPLOY_IP }} >> ~/.ssh/known_hosts
+
+    # 4. Conectar y desplegar en el servidor
+    - name: Deploy to server
+      run: |
+        ssh ${{ secrets.DEPLOY_NAME }}@${{ secrets.DEPLOY_IP }} << 'EOF'
+          cd ${{ secrets.DEPLOY_PATH }}
+          git fetch
+          git reset --hard origin/main
+          docker-compose down
+          docker-compose build
+          docker-compose up -d
+        EOF
