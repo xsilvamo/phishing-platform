@@ -7,5 +7,6 @@ services:
       - "80:80"   # Puerto HTTP
       - "443:443" # Puerto HTTPS
     volumes:
-      - ./default.conf:/etc/nginx/conf.d/default.conf # Archivo de configuración Nginx
-      - /etc/nginx/ssl:/etc/nginx/ssl                 # Certificados SSL (asegúrate de mapear la ruta correcta en tu servidor)
+      - ./default.conf:/etc/nginx/conf.d/default.conf   # Configuración de Nginx
+      - /etc/ssl/certs/underhack.me.crt:/etc/ssl/certs/underhack.me.crt   # Certificado SSL
+      - /etc/ssl/private/underhack.me.key:/etc/ssl/private/underhack.me.key  # Clave privada SSL
