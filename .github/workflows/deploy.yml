@@ -30,7 +30,6 @@ jobs:
     # Copiar los archivos al servidor
     - name: Deploy to Server
       run: |
-        mkdir -p $DEPLOY_PATH
         scp -r dist/* $DEPLOY_USER@$DEPLOY_IP:$DEPLOY_PATH
         ssh $DEPLOY_USER@$DEPLOY_IP "docker-compose down && docker-compose up -d"
       env:
