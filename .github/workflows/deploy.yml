@@ -22,8 +22,8 @@ jobs:
 
     # 3. Añadir la IP a host conocidos
     - name: Add server to known_hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.DEPLOY_IP }} >> ~/.ssh/known_hosts
+      run: |
+        ssh-keyscan -H ${{ secrets.DEPLOY_IP }} >> ~/.ssh/known_hosts
 
     # 4. Conectar y desplegar en el servidor
     - name: Deploy to server
